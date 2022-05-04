@@ -14,20 +14,20 @@ public class Fonco : MonoBehaviour
 {
     public GameObject[] objectToPlace;
     public AudioClip[] audioToLes;
-    public Button buttonNext;
-    public TextMeshProUGUI tmp;
     public AudioSource audioSour;
-
+    public GameObject contentScroll;
+    public GameObject Ref;
+    public ScrollRect scrollRect;
+    public GameObject refPos;
     private GameObject clone;
-    
     private ARRaycastManager arOrigin;
     private Pose placementPose ,savedPose;
-    private int x=0;
+    private int  nbrObj=0;
     private bool placementPoseIsValid = false;
-    private static bool t = false;
-    private string lang = null , cours =null;
-
-
+    private bool elg= true;
+    private string lang = null , cours =null, pathObjet=null;
+    private List<Button> btnList = new List<Button>();
+   
 
 
     void Awake()
@@ -37,152 +37,179 @@ public class Fonco : MonoBehaviour
         lang = ParVar.lang;
         cours = ParVar.cours;
 
+        contentScroll.SetActive(false);
 
-        /*
-          switch (cours)
+
+        switch (cours)
          {
-             case 0:
-                  switch (lang)
-        		 {
-             case "ar":
-		pathObjet="obj/Alpha/ar/";
-		nbrObj=28;
-                 break;
-             case "tmz":
-                pathObjet="obj/Alpha/tmz/";
-		nbrObj=33;
-                 break;
-             case "fr":
-		pathObjet="obj/Alpha/latin/";	
-		nbrObj=26;
-                 break;
-             case "eng":
-                pathObjet="obj/Alpha/latin/";	
-		nbrObj=26;
-                 break;
+             case "alphabet":
+                              switch (lang)
+        		             {
+                         case "ar":
+		            pathObjet="obj/alpha/ar/";
+		            nbrObj=0;
+                             break;
+                         case "tmz":
+                            pathObjet="obj/alpha/tmz/";
+		            nbrObj=0;
+                             break;
+                         case "fr":
+		            pathObjet="obj/alpha/latin/";	
+		            nbrObj=0;
+                             break;
+                         case "eng":
+                    pathObjet="obj/alpha/latin/";	
+		            nbrObj=0;
+                             break;
 
-         		}
-
-                 break;
+         		            }
 
                  break;
-             case 1:
-		pathObjet="obj/Number/";	
+             case "numbers":
+		pathObjet= "obj/numbers/";	
 		nbrObj=11;
                  break;
-	     case 2:
-		pathObjet="obj/Fruits/";	
+	     case "fruits":
+		pathObjet="obj/fruits/";	
 		nbrObj=7;
                  break;
-             case 3:
-		pathObjet="obj/Legumes/";	
-		nbrObj=X;
+             case "vegetables":
+		pathObjet= "obj/vegetables/";	
+		nbrObj=0;
                  break;
-             case 4:
-		pathObjet="obj/Animals/";	
+             case "animals":
+		pathObjet="obj/animals/";	
 		nbrObj=10;
                  break;
-	     case 5:
-		pathObjet="obj/Espace/";	
+	     case "space":
+		pathObjet="obj/space/";	
 		nbrObj=11;
                  break;
-	     case 6:
-		pathObjet="obj/Formes/";	
-		nbrObj=11;
+	     case "shapes":
+		pathObjet= "obj/shapes/";	
+		nbrObj=3;
                  break;
-           
-         }
-         
-         
-         */
+         case "colors":
+        pathObjet = "obj/colors/";
+        nbrObj = 9;
+                break;
 
-        objectToPlace = new GameObject[11];
-        audioToLes = new AudioClip[11];
-        for (int i = 0; i <= 10; i++) {
-            var audioClip = Resources.Load<AudioClip>("ArSound/Number/" + lang + "/" + i);
-            var objLoad = Resources.Load<GameObject>("obj/Number/" + lang + "/" + i);
+        }
+         
+        
+         
+
+        objectToPlace = new GameObject[nbrObj];
+        audioToLes = new AudioClip[nbrObj];
+        for (int i = 0; i < nbrObj; i++) {
+            var audioClip = Resources.Load<AudioClip>("ArSound/"+cours+"/" + lang + "/" + i);
+            var objLoad = Resources.Load<GameObject>(pathObjet + i);
             audioToLes[i] = audioClip;
             objectToPlace[i] = objLoad;
         }
-       
+        Button btn = Ref.GetComponent<Button>();
+        btn.onClick.AddListener(() => Rest());
+        for (int i = 0; i < nbrObj; i++)
+        {
+            Button tempo = Add_Item(i);
+            btnList.Add(tempo);
+            int rep = i;
+            btnList[rep].onClick.AddListener(() => Iteam_Choice(rep));
+        }
+        
+    }
+
+
+    private void Rest()
+    {
+        Destroy(clone);
+        contentScroll.SetActive(false);
+        elg = true;
+        //indicator popup tap to place
+    }
+
+        private void Iteam_Choice(int d)
+    {   
+        Destroy(clone);
+        clone = Instantiate(objectToPlace[d], savedPose.position, savedPose.rotation);
+        audioSour.clip = audioToLes[d];
+        audioSour.Play();
 
     }
 
 
     void Start()
     {
-       
-        buttonNext.gameObject.SetActive(false);
+        if(pathObjet==null || cours==null || lang==null || nbrObj == 0) SceneManager.LoadScene(0);
         arOrigin = FindObjectOfType<ARRaycastManager>();
-        Button btn = buttonNext.GetComponent<Button>();
-       btn.onClick.AddListener(TaskOnClick);
+        
        
-
+       
 
 
     }
 
-
-        void Update()
+    void Update()
         {
             UpdatePlacementPose();
-            if (placementPoseIsValid && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && x==0)
+            if (placementPoseIsValid && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && elg )
             {
-            audioSour.clip = audioToLes[x];
-            audioSour.Play();
+            
             PlaceObject();
-                x++;
+            contentScroll.SetActive(true);
+            elg=false;
             }
+        
+    }
 
-        }
-
-
-
-        void TaskOnClick()
+    //get childen 
+    GameObject GetChildWithName(GameObject obj, string name)
+    {
+        Transform trans = obj.transform;
+        Transform childTrans = trans.Find(name);
+        if (childTrans != null)
         {
-
-                 if (t){
-                        x = 0;
-                        t = false;
-                        SceneManager.LoadScene(0);
-
-                    }
-                    if (objectToPlace.Length > x)
-                    {
-                         Debug.Log("Langue : " + lang + "| l'objet numero : " + x);
-                         Destroy(clone);
-                         clone = Instantiate(objectToPlace[x], savedPose.position, savedPose.rotation);
-                            audioSour.clip = audioToLes[x];
-                            audioSour.Play();
-                            x++;
-
-                    }
-                     else
-                    {
-                        tmp.text = "Terminer";
-                        t = true;
-                    } 
-
-
-
-
+            return childTrans.gameObject;
         }
+        else
+        {
+            return null;
+        }
+    }
 
 
+    //Scroll Iteam clone
+
+    private Button Add_Item(int x)
+    {
+        GameObject gh = Add_Texture(x);
+        return gh.GetComponent<Button>();
 
 
+    }
+    private GameObject Add_Texture(int x)
+    {
 
-
+        Vector3 scale = new Vector3(1f, 1f, 1f);
+        GameObject gm = Instantiate(Ref);
+        gm.transform.parent = contentScroll.transform;
+        gm.name = "" + x;
+        gm.transform.localScale = scale;
+        RawImage info_img = GetChildWithName(gm, "content_img").GetComponent<RawImage>();
+        var texture = Resources.Load<Texture2D>(pathObjet + x);
+        info_img.texture = texture;
+        return gm;
+    }
 
 
         //placer Notre objet 3D
         private void PlaceObject()
         {
             savedPose = placementPose;
-            clone = Instantiate(objectToPlace[x], placementPose.position, placementPose.rotation);
-            buttonNext.gameObject.SetActive(true);
+            clone = Instantiate(refPos, placementPose.position, placementPose.rotation);
+           
 
-        }
+    }
 
 
         //Chercher Position d'objet 3D 

@@ -7,26 +7,29 @@ using UnityEngine.UI;
 
 public class test : MonoBehaviour
 {
-    public AudioSource m_MyAudioSource;
-    public AudioClip[] clyp;
-    public Button btn;
-    private int x = 0;
-    void Start()
+    public GameObject contentScroll;
+    public RawImage bg_item_img;
+
+    void Awake()
     {
-        clyp= new AudioClip[11];
-        for (int i = 0; i <= 10; i++)
-        {
-            var audioClip = Resources.Load<AudioClip>("ArSound/Number/ar/" + i);
-            clyp[i] = audioClip;
-           
-        }
-        btn.onClick.AddListener(TaskOnClick);
+        PrepareItem();
     }
-    void TaskOnClick()
+
+    private void Add_Bg_Img(GameObject iteam)
     {
-        m_MyAudioSource.clip = clyp[x];
-        m_MyAudioSource.Play();
-        x++;
+        GameObject bg_img = new GameObject();
+        bg_img.transform.parent = iteam.transform;
+      //  bg_img = gameObject.GetComponent<RawImage>();
     }
+
+    private void PrepareItem()
+    {
+        GameObject gm = new GameObject();
+        gm.transform.parent = contentScroll.transform;
+        gm.name = "0";
+       Add_Bg_Img(gm);
+
+    }
+
 
 }
