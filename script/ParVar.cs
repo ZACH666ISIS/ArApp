@@ -6,4 +6,5 @@ public class ParVar : MonoBehaviour
 {
     public static string lang;
     public static string cours;
+    
 }

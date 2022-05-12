@@ -1,9 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Data : MonoBehaviour
+using System;
+[System.Serializable]
+public class Data 
 {
-    public static string[][] pathObjet;
-    public static string[][] pathAudio;
+
+
+    private int matLang;
+
+    public Data(int matLang)
+    {
+        this.matLang=matLang;
+    }
+
+    public int GetMatLang()
+    {
+        return matLang;
+    }
+   
 }

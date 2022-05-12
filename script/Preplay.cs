@@ -16,63 +16,43 @@ using System.Text.RegularExpressions;
 
 public class Preplay : MonoBehaviour
 {
-    public GameObject popUp;
-    public TextMeshProUGUI inputUser,inputYears,popInfo;
-    public Button btnExit, btnSend;
-    private string user,years,pathStrg= "Assets\\Resources\\storage\\info.txt";
-    private int date;
+
+    public GameObject loading;
+
+  
     void Awake()
     {
-        if (System.IO.File.Exists(pathStrg))SceneManager.LoadScene(1);
+    if (SaveSystem.LoadInfo()!=null)SceneManager.LoadScene(1);
     }
     void Start()
     {
-        popUp.SetActive(false);
-        btnSend.onClick.AddListener(RetInfo);
-        btnExit.onClick.AddListener(OnPop);
+        loading.SetActive(false);
+       
 
     }
 
  
-    void OnPop()
-    {
-        popUp.SetActive(false);
 
+
+    IEnumerator LoadYourAsyncScene(int x)
+    {
+
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(x);
+
+        loading.SetActive(true);
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        loading.SetActive(false);
     }
-    void RetInfo()
+    public void RetInfo(int y)
     {
-        user = inputUser.text;
-        years = inputYears.text;
-        Regex rgx = new Regex(@"\d{4}");
-        if (user.Length < 13)
-        {
-            if (rgx.IsMatch(years) && years.Length==5 )
-            {
-                System.IO.FileStream oFileStream = null;
-                oFileStream = new System.IO.FileStream(pathStrg, System.IO.FileMode.Create);
-                oFileStream.Close();
-                StreamWriter writer = new StreamWriter(pathStrg, true);
-                writer.WriteLine(user+"|"+years);
-                writer.Close();
-            }
-
-            else
-            {
-                popInfo.text = "Verify your birth years";
-                popUp.SetActive(true);
-            }
-
-
-        }
-
-
-        else
-        {
-            popInfo.text = "Length of username should be under 12 characters";
-            popUp.SetActive(true);
-        }
-      
         
+                SaveSystem.SetInfo(y);
+                StartCoroutine(LoadYourAsyncScene(1));
 
     }
    

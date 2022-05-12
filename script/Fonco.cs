@@ -17,8 +17,11 @@ public class Fonco : MonoBehaviour
     public AudioSource audioSour;
     public GameObject contentScroll;
     public GameObject Ref;
+    public GameObject quitSession,popUp;
     public ScrollRect scrollRect;
     public GameObject refPos;
+    public Button btnPopUp;
+    public TextMeshProUGUI txt;
     private GameObject clone;
     private ARRaycastManager arOrigin;
     private Pose placementPose ,savedPose;
@@ -27,39 +30,46 @@ public class Fonco : MonoBehaviour
     private bool elg= true;
     private string lang = null , cours =null, pathObjet=null;
     private List<Button> btnList = new List<Button>();
+    private Data matLang;
    
-
 
     void Awake()
     {
 
+        matLang = SaveSystem.LoadInfo();
 
+        string line = Resources.Load<TextAsset>("storage/indiceSession").text;
+        string[] param = line.Split('|');
+        line = null;
+        txt.text = param[matLang.GetMatLang()];
+        if (matLang.GetMatLang() == 2) txt.fontSize = 50;
+        param = null;
         lang = ParVar.lang;
         cours = ParVar.cours;
-
         contentScroll.SetActive(false);
-
-
+        quitSession.SetActive(false);
+        popUp.SetActive(true);
+        btnPopUp.onClick.AddListener(() => Quit_Popup());
         switch (cours)
          {
              case "alphabet":
                               switch (lang)
         		             {
                          case "ar":
-		            pathObjet="obj/alpha/ar/";
-		            nbrObj=0;
+		            pathObjet="obj/alphabet/ar/";
+		            nbrObj=28;
                              break;
                          case "tmz":
-                            pathObjet="obj/alpha/tmz/";
-		            nbrObj=0;
+                    pathObjet= "obj/alphabet/tmz/";
+		            nbrObj=33;
                              break;
                          case "fr":
-		            pathObjet="obj/alpha/latin/";	
-		            nbrObj=0;
+		            pathObjet="obj/alphabet/latin/";	
+		            nbrObj=26;
                              break;
                          case "eng":
-                    pathObjet="obj/alpha/latin/";	
-		            nbrObj=0;
+                    pathObjet="obj/alphabet/latin/";	
+		            nbrObj=26;
                              break;
 
          		            }
@@ -75,7 +85,7 @@ public class Fonco : MonoBehaviour
                  break;
              case "vegetables":
 		pathObjet= "obj/vegetables/";	
-		nbrObj=0;
+		nbrObj=5;
                  break;
              case "animals":
 		pathObjet="obj/animals/";	
@@ -107,6 +117,7 @@ public class Fonco : MonoBehaviour
             audioToLes[i] = audioClip;
             objectToPlace[i] = objLoad;
         }
+
         Button btn = Ref.GetComponent<Button>();
         btn.onClick.AddListener(() => Rest());
         for (int i = 0; i < nbrObj; i++)
@@ -119,6 +130,12 @@ public class Fonco : MonoBehaviour
         
     }
 
+    public void Quit_Popup()
+    {
+        quitSession.SetActive(true);
+        popUp.SetActive(false);
+
+    }
 
     private void Rest()
     {
@@ -184,15 +201,13 @@ public class Fonco : MonoBehaviour
     {
         GameObject gh = Add_Texture(x);
         return gh.GetComponent<Button>();
-
-
     }
     private GameObject Add_Texture(int x)
     {
 
         Vector3 scale = new Vector3(1f, 1f, 1f);
         GameObject gm = Instantiate(Ref);
-        gm.transform.parent = contentScroll.transform;
+        gm.transform.SetParent(contentScroll.transform);
         gm.name = "" + x;
         gm.transform.localScale = scale;
         RawImage info_img = GetChildWithName(gm, "content_img").GetComponent<RawImage>();

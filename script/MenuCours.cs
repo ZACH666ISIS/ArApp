@@ -14,31 +14,63 @@ using UnityEngine.SceneManagement;
 
 public class MenuCours : MonoBehaviour
 {
-    public TextMeshProUGUI wlc,age;
-    DateTime dateCurrent = DateTime.Now;
-    int x;
+    public TextMeshProUGUI[] coursName = new TextMeshProUGUI[8];
+    public GameObject loading,listLang;
+    public Button btnSetting;
+    private Data matLang;
     void Awake()
     {
         
-            string readFile = @"Assets\\Resources\\storage\\info.txt";
-            string[] line = System.IO.File.ReadAllLines(readFile);
-            string[] info = line[0].Split("|");
-            wlc.text += info[0];
-            x =dateCurrent.Year-Int32.Parse(info[1]);
-            age.text += x;
+        listLang.SetActive(false);
+        loading.SetActive(false);
+        matLang = SaveSystem.LoadInfo();
+        string temp = Resources.Load<TextAsset>("storage/lang").text;
+        string[] lines = temp.Split("\n");
+        temp = null;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string[] param = lines[i].Split('|');
+            coursName[i].text = param[matLang.GetMatLang()];
+        }
+        lines = null;
+        
 
-
-
-
+        btnSetting.onClick.AddListener(() => Aff());
 
     }
+    public void Aff()
+    {
+        if(listLang.activeSelf)
+            listLang.SetActive(false);
+        else listLang.SetActive(true);
+    }
+
     public void setCours(string cours)
     {
         ParVar.cours = cours;
-        SceneManager.LoadScene(1);
+        StartCoroutine(LoadYourAsyncScene(2));
+
     }
 
+    IEnumerator LoadYourAsyncScene(int s)
+            {
+                
 
+                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(s);
 
+        loading.SetActive(true);
+                // Wait until the asynchronous scene fully loads
+                while (!asyncLoad.isDone)
+                {
+                    yield return null;
+                }
+        loading.SetActive(false);
+    }
+
+    public void ChangeLang(int h)
+    {
+        SaveSystem.SetInfo(h);
+        StartCoroutine(LoadYourAsyncScene(1));
+    }
 
 }
