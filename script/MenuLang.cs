@@ -15,7 +15,7 @@ public class MenuLang : MonoBehaviour
 {
     public GameObject loading;
     public TextMeshProUGUI txtWlc;
-    private Data matLang;
+    private User matLang;
     void Awake()
     {
         matLang = SaveSystem.LoadInfo();
@@ -45,7 +45,6 @@ public class MenuLang : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(x);
 
         loading.SetActive(true);
-        // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
         {
             yield return null;

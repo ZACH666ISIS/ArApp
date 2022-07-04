@@ -1,16 +1,23 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class User : MonoBehaviour
+using System;
+[System.Serializable]
+public class User
 {
-    [Serializable]
-    public struct Parameters
-    {
-        public string usename;
-        public string ddn;
-        public string langNat;
-    }
-}
 
+
+    private int matLang;
+    private bool ent;
+
+    public User(int matLang)
+    {
+        this.matLang=matLang;
+    }
+
+    public int GetMatLang()
+    {
+        return matLang;
+    }
+   
+}

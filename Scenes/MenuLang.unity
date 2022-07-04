@@ -308,7 +308,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -350,7 +350,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2028342777}
-  - {fileID: 607352560}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -790,7 +789,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 151783554}
+    m_TransformParent: {fileID: 2028342777}
     m_Modifications:
     - target: {fileID: 7746642778898237380, guid: 83fff1e4d8bb6fd47a35059b7c4c4b0e,
         type: 3}
@@ -810,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 7746642778898237381, guid: 83fff1e4d8bb6fd47a35059b7c4c4b0e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7746642778898237381, guid: 83fff1e4d8bb6fd47a35059b7c4c4b0e,
         type: 3}
@@ -1823,7 +1822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.42352942, g: 0.49411765, b: 0.88235295, a: 1}
+  m_Color: {r: 0.3764706, g: 0.1764706, b: 0.87058824, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1863,6 +1862,7 @@ RectTransform:
   - {fileID: 149258569}
   - {fileID: 670962742}
   - {fileID: 1430162439}
+  - {fileID: 607352560}
   m_Father: {fileID: 151783554}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

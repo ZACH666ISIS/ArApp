@@ -11,19 +11,19 @@ public class SaveSystem
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/info.iori";
         FileStream fs = new FileStream(path, FileMode.Create);
-        Data d = new Data(matLang);
+        User d = new User(matLang);
         formatter.Serialize(fs, d);
         fs.Close();
     }
 
-    public static Data LoadInfo()
+    public static User LoadInfo()
     {
         string path = Application.persistentDataPath + "/info.iori";
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fs = new FileStream(path, FileMode.Open);
-            Data n = formatter.Deserialize(fs) as Data;
+            User n = formatter.Deserialize(fs) as User;
             fs.Close();
             return n;
         }

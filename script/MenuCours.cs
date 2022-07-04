@@ -17,7 +17,7 @@ public class MenuCours : MonoBehaviour
     public TextMeshProUGUI[] coursName = new TextMeshProUGUI[8];
     public GameObject loading,listLang;
     public Button btnSetting;
-    private Data matLang;
+    private User matLang;
     void Awake()
     {
         
@@ -51,7 +51,7 @@ public class MenuCours : MonoBehaviour
         StartCoroutine(LoadYourAsyncScene(2));
 
     }
-
+    //function asynchron avant le chargement du scene
     IEnumerator LoadYourAsyncScene(int s)
             {
                 
@@ -59,7 +59,6 @@ public class MenuCours : MonoBehaviour
                 AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(s);
 
         loading.SetActive(true);
-                // Wait until the asynchronous scene fully loads
                 while (!asyncLoad.isDone)
                 {
                     yield return null;
@@ -71,6 +70,10 @@ public class MenuCours : MonoBehaviour
     {
         SaveSystem.SetInfo(h);
         StartCoroutine(LoadYourAsyncScene(1));
+    }
+    public void sort()
+    {
+        Application.Quit();
     }
 
 }
